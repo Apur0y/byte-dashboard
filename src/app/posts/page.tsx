@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { motion } from "framer-motion"
-import Link from "next/link"
-import { useFetch } from "@/hooks/useFetch"
-import { Post } from "@/types/allTypes"
+import { useState } from "react";
+import { motion } from "framer-motion";
+import Link from "next/link";
+import { useFetch } from "@/hooks/useFetch";
+import { Post } from "@/types/allTypes";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -14,7 +14,7 @@ const containerVariants = {
       staggerChildren: 0.1,
     },
   },
-}
+};
 
 const cardVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -25,21 +25,23 @@ const cardVariants = {
       duration: 0.5,
     },
   },
-}
+};
 
 export default function PostsPage() {
-  const [showError, setShowError] = useState(false)
+  const [showError, setShowError] = useState(false);
   const {
     data: posts,
     loading,
-    error
+    error,
   } = useFetch<Post[]>(
-    showError ? "https://jsonplaceholder.typicode.com/invalid-posts" : "https://jsonplaceholder.typicode.com/posts",
-  )
+    showError
+      ? "https://jsonplaceholder.typicode.com/invalid-posts"
+      : "https://jsonplaceholder.typicode.com/posts"
+  );
 
   const handleToggleError = () => {
-    setShowError(!showError)
-  }
+    setShowError(!showError);
+  };
 
   if (loading) {
     return (
@@ -48,7 +50,7 @@ export default function PostsPage() {
           {/* <LoadingSpinner size="lg" /> */}Loading...
         </div>
       </div>
-    )
+    );
   }
 
   if (error) {
@@ -56,9 +58,10 @@ export default function PostsPage() {
       <div className="p-8">
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-foreground mb-2">Posts</h1>
-          <p className="text-muted-foreground">Explore all blog posts and articles.</p>
+          <p className="text-muted-foreground">
+            Explore all blog posts and articles.
+          </p>
         </div>
-        {/* <ErrorMessage message={error} onRetry={refetch} className="max-w-md" /> */}
         <button
           onClick={handleToggleError}
           className="mt-4 px-4 py-2 bg-secondary text-secondary-foreground rounded-md hover:bg-secondary/80 transition-colors"
@@ -66,7 +69,7 @@ export default function PostsPage() {
           {showError ? "Load Valid Posts" : "Simulate Error"}
         </button>
       </div>
-    )
+    );
   }
 
   return (
@@ -80,7 +83,9 @@ export default function PostsPage() {
         <div className="flex items-center justify-between mb-4">
           <div>
             <h1 className="text-3xl font-bold text-foreground mb-2">Posts</h1>
-            <p className="text-muted-foreground">Explore all blog posts and articles.</p>
+            <p className="text-muted-foreground">
+              Explore all blog posts and articles.
+            </p>
           </div>
           <button
             onClick={handleToggleError}
@@ -89,7 +94,9 @@ export default function PostsPage() {
             {showError ? "Load Valid Posts" : "Simulate Error"}
           </button>
         </div>
-        <div className="text-sm text-muted-foreground">Found {posts?.length || 0} posts</div>
+        <div className="text-sm text-muted-foreground">
+          Found {posts?.length || 0} posts
+        </div>
       </motion.div>
 
       <motion.div
@@ -99,18 +106,34 @@ export default function PostsPage() {
         className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
       >
         {posts?.map((post) => (
-          <motion.div key={post.id} variants={cardVariants}>
+          <motion.div
+            key={post.id}
+            className="bg-neutral-800 p-3 rounded-lg border border-transparent"
+            variants={cardVariants}
+            whileHover={{ scale: 1.03, borderColor: "hsl(var(--primary))" }}
+            transition={{ type: "spring", stiffness: 200, damping: 15 }}
+          >
             <Link href={`/posts/${post.id}`}>
               <div className="h-full">
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs text-primary bg-primary/10 px-2 py-1 rounded-full">Post #{post.id}</span>
-                    <span className="text-xs text-muted-foreground">User {post.userId}</span>
+                    <span className="text-xs text-primary bg-primary/10 px-2 py-1 rounded-full">
+                      Post #{post.id}
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      User {post.userId}
+                    </span>
                   </div>
-                  <h3 className="font-semibold text-foreground line-clamp-2 capitalize">{post.title}</h3>
-                  <p className="text-sm text-muted-foreground line-clamp-3">{post.body}</p>
+                  <h3 className="font-semibold text-foreground line-clamp-2 capitalize">
+                    {post.title}
+                  </h3>
+                  <p className="text-sm text-muted-foreground line-clamp-3">
+                    {post.body}
+                  </p>
                   <div className="pt-2 border-t border-border">
-                    <span className="text-xs text-primary hover:text-primary/80 transition-colors">Read more →</span>
+                    <span className="text-xs text-primary hover:text-primary/80 transition-colors">
+                      Read more →
+                    </span>
                   </div>
                 </div>
               </div>
@@ -119,5 +142,5 @@ export default function PostsPage() {
         ))}
       </motion.div>
     </div>
-  )
+  );
 }

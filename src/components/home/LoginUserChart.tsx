@@ -82,42 +82,6 @@ export default function PerformanceChart() {
 
 
 
-  const calculatePerformanceData = (data:any) => {
-    // Group users by month based on createdAt
-    const monthlyData:any = {};
-
-    data?.forEach((user:any) => {
-      const date = new Date(user.createdAt);
-      const monthName = date.toLocaleDateString('en-US', { month: 'short' });
-
-      if (!monthlyData[monthName]) {
-        monthlyData[monthName] = { sales: 0, revenue: 0 }; // sales = employees, revenue = job seekers
-      }
-
-      if (user.role === 'EMPLOYEE') {
-        monthlyData[monthName].sales += 1;
-      } else if (user.role === 'JOB_SEEKER') {
-        monthlyData[monthName].revenue += 1;
-      }
-    });
-
-    // Convert to array format
-    const performanceData = Object.entries(monthlyData).map(([name, counts]) => {
-      const typedCounts = counts as { sales: number; revenue: number };
-      return {
-        name,
-        sales: typedCounts.sales,     // employees
-        revenue: typedCounts.revenue  // job seekers
-      };
-    });
-
-    return performanceData;
-  };
-
-  // Calculate the performance data
-  const performanceData = calculatePerformanceData(user?.data);
-console.log(performanceData)
-console.log(user?.data)
 
   useEffect(() => {
     setIsClient(true);
@@ -125,25 +89,25 @@ console.log(user?.data)
 
   if (!isClient) {
     return (
-      <div className="w-full h-[500px] p-4 flex items-center justify-center bg-gray-50 rounded-lg">
-        <div className="text-gray-500">Loading chart...</div>
+      <div className="w-full h-[500px] p-4 flex items-center justify-center bg-neutral-800 rounded-lg">
+        <div className="text-gray-200">Loading chart...</div>
       </div>
     );
   }
 
   return (
-    <div className="w-full h-[500px] p-6 rounded-lg bg-white shadow-lg border border-gray-200">
+    <div className="w-full h-[500px] p-6 rounded-lg shadow-lg border border-gray-200">
       <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
         <h2 className="text-2xl font-bold text-gray-800">Login User</h2>
         <div className="flex items-center gap-4">
           <select
             value={selectedMetric}
             onChange={(e) => setSelectedMetric(e.target.value)}
-            className="px-4 py-2 border bg-primary text-white rounded-md border-primary "
+            className="px-4 py-2 border bg-black text-white rounded-md border-primary "
           >
             <option value="all">All Metrics</option>
-            <option value="sales">Employee</option>
-            <option value="revenue">Job Seeker</option>
+            <option value="sales">Active User</option>
+            <option value="revenue">Total Posts</option>
 
           </select>
 
@@ -202,7 +166,7 @@ console.log(user?.data)
               dataKey="sales"
               stroke="#10b981"
               strokeWidth={3}
-              name="For Employer"
+              name="Active User"
               dot={<CustomDot dataKey="sales" />}
               activeDot={{ r: 6, stroke: '#10b981', strokeWidth: 2, fill: 'white' }}
               isAnimationActive={true}
@@ -215,7 +179,7 @@ console.log(user?.data)
               dataKey="revenue"
               stroke="#FF0000"
               strokeWidth={3}
-              name="Job Seeker "
+              name="Total Posts"
               dot={<CustomDot dataKey="revenue" />}
               activeDot={{ r: 6, stroke: '#f59e0b', strokeWidth: 2, fill: 'white' }}
               isAnimationActive={true}

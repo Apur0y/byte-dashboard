@@ -57,10 +57,10 @@ export default function Home() {
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.4 }}
-        className="grid grid-cols-1 lg:grid-cols-2 gap-6"
+        className="grid grid-cols-1 lg:grid-cols-2 gap-6  rounded-lg"
       >
 
-        <div>
+        <div className="bg-neutral-800 p-3 rounded-lg">
           <h2 className="text-xl font-semibold mb-4 flex items-center gap-2"><CiTimer className="text-blue-500" />Recent Activity</h2>
           <div className="space-y-4">
             {[
@@ -86,7 +86,56 @@ export default function Home() {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.4, delay: 0.6 + index * 0.1 }}
-                className="flex items-center justify-between p-3 bg-secondary/50 rounded-lg"
+                className="flex items-center justify-between p-3 bg-secondary/50  border-b "
+              >
+                <div className="flex items-center gap-3">
+                  <div
+                    className={`w-2 h-2 rounded-full ${
+                      activity.type === "user"
+                        ? "bg-blue-500"
+                        : activity.type === "post"
+                        ? "bg-green-500"
+                        : "bg-yellow-500"
+                    }`}
+                  />
+                  <span className="text-sm text-foreground">
+                    {activity.action}
+                  </span>
+                </div>
+                <span className="text-xs text-muted-foreground">
+                  {activity.time}
+                </span>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+        <div className="bg-neutral-800 p-3 rounded-lg">
+          <h2 className="text-xl font-semibold mb-4 flex items-center gap-2"><CiTimer className="text-blue-500" />Recent Activity</h2>
+          <div className="space-y-4">
+            {[
+              {
+                action: "New user registered",
+                time: "2 minutes ago",
+                type: "user",
+              },
+              { action: "Post published", time: "5 minutes ago", type: "post" },
+              {
+                action: "System backup completed",
+                time: "1 hour ago",
+                type: "system",
+              },
+              {
+                action: "Database optimized",
+                time: "3 hours ago",
+                type: "system",
+              },
+            ].map((activity, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.4, delay: 0.6 + index * 0.1 }}
+                className="flex items-center justify-between p-3 bg-secondary/50  border-b"
               >
                 <div className="flex items-center gap-3">
                   <div

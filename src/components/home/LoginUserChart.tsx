@@ -98,7 +98,7 @@ export default function PerformanceChart() {
   return (
     <div className="w-full h-[500px] p-6 rounded-lg shadow-lg border border-gray-200">
       <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
-        <h2 className="text-2xl font-bold text-gray-800">Login User</h2>
+        <h2 className="text-2xl font-bold text-gray-300">Statistics</h2>
         <div className="flex items-center gap-4">
           <select
             value={selectedMetric}

@@ -31,13 +31,8 @@ export default function PostsPage() {
   const [showError, setShowError] = useState(false);
   const {
     data: posts,
-    loading,
-    error,
-  } = useFetch<Post[]>(
-    showError
-      ? "https://jsonplaceholder.typicode.com/invalid-posts"
-      : "https://jsonplaceholder.typicode.com/posts"
-  );
+    loading
+  } = useFetch<Post[]>( "https://jsonplaceholder.typicode.com/posts");
 
   const handleToggleError = () => {
     setShowError(!showError);
@@ -53,24 +48,6 @@ export default function PostsPage() {
     );
   }
 
-  if (error) {
-    return (
-      <div className="p-8">
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-foreground mb-2">Posts</h1>
-          <p className="text-muted-foreground">
-            Explore all blog posts and articles.
-          </p>
-        </div>
-        <button
-          onClick={handleToggleError}
-          className="mt-4 px-4 py-2 bg-secondary text-secondary-foreground rounded-md hover:bg-secondary/80 transition-colors"
-        >
-          {showError ? "Load Valid Posts" : "Simulate Error"}
-        </button>
-      </div>
-    );
-  }
 
   return (
     <div className="p-8">

@@ -37,7 +37,7 @@ const rowVariants = {
 
 export default function UsersPage() {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [hide,setHide]=useState(false)
+
   const outRef =useRef<HTMLDivElement>(null)
 
   const {
@@ -57,10 +57,10 @@ export default function UsersPage() {
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (outRef.current && !outRef.current.contains(event.target as Node)) {
-        setHide(true);
+  
         setSelectedUser(null); 
       } else {
-        setHide(false); 
+     
       }
     }
 
@@ -71,7 +71,7 @@ export default function UsersPage() {
     };
   }, [outRef]);
 
-  console.log(hide);
+
 
     if (loading) {
     return (

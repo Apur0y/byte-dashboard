@@ -4,19 +4,18 @@ import { motion } from "framer-motion"
 import Link from "next/link"
 import { useFetch } from "@/hooks/useFetch"
 import { Post } from "@/types/allTypes"
+import { useParams } from "next/navigation"
 
-interface PostDetailPageProps {
-  params: {
-    id: string
-  }
-}
 
-export default function PostDetailPage({ params }: PostDetailPageProps) {
+
+export default function PostDetailPage() {
+
+  const {id}=useParams();
   const {
     data: post,
     loading,
     error
-  } = useFetch<Post>(`https://jsonplaceholder.typicode.com/posts/${params.id}`)
+  } = useFetch<Post>(`https://jsonplaceholder.typicode.com/posts/${id}`)
 
   if (loading) {
     return (

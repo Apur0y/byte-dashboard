@@ -4,33 +4,6 @@ import Statistics from "@/components/home/Statistics";
 import { motion } from "framer-motion";
 import { CiTimer } from "react-icons/ci";
 
-const stats = [
-  { label: "Total Posts", value: "150", change: "+12%", positive: true },
-  { label: "Active Users", value: "1,234", change: "+8%", positive: true },
-  { label: "Engagement Rate", value: "68%", change: "-2%", positive: false },
-  { label: "Revenue", value: "$12,450", change: "+15%", positive: true },
-];
-
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.5,
-    },
-  },
-};
 
 export default function Home() {
   return (

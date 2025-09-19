@@ -67,7 +67,7 @@ export default function Sidebar() {
               href={item.href}
               className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors relative ${
                 isActive
-                  ? "bg-primary text-primary-foreground"
+                  ? "bg-neutral-800 text-primary-foreground"
                   : "hover:bg-secondary text-muted-foreground hover:text-foreground"
               }`}
             >

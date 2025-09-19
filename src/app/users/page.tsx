@@ -1,9 +1,18 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { motion } from "framer-motion"
-import { useFetch } from "@/hooks/useFetch"
-import { User } from "@/types/allTypes"
+import { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
+import { useFetch } from "@/hooks/useFetch";
+import { User } from "@/types/allTypes";
+import { RxCrossCircled } from "react-icons/rx";
+interface LabelProps {
+  children: React.ReactNode;
+}
+
+interface DetailsProps {
+  label: string;
+  value: string | number | null;
+}
 
 const tableVariants = {
   hidden: { opacity: 0 },
@@ -13,7 +22,7 @@ const tableVariants = {
       staggerChildren: 0.05,
     },
   },
-}
+};
 
 const rowVariants = {
   hidden: { opacity: 0, x: -20 },
@@ -24,33 +33,47 @@ const rowVariants = {
       duration: 0.4,
     },
   },
-}
+};
 
 export default function UsersPage() {
-  const [selectedUser, setSelectedUser] = useState<User | null>(null)
-  const [showError, setShowError] = useState(false)
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [hide,setHide]=useState(false)
+  const outRef =useRef<HTMLDivElement>(null)
 
   const {
     data: users,
-    loading,
-    error
-  } = useFetch<User[]>(
-    showError ? "https://jsonplaceholder.typicode.com/invalid-users" : "https://jsonplaceholder.typicode.com/users",
-  )
-
-  const handleToggleError = () => {
-    setShowError(!showError)
-  }
+    loading
+  } = useFetch<User[]>( "https://jsonplaceholder.typicode.com/users");
 
   const handleUserClick = (user: User) => {
-    setSelectedUser(user)
-  }
+    setSelectedUser(user);
+  };
 
   const handleCloseModal = () => {
-    setSelectedUser(null)
-  }
+    setSelectedUser(null);
+  };
 
-  if (loading) {
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (outRef.current && !outRef.current.contains(event.target as Node)) {
+        setHide(true);
+        setSelectedUser(null); 
+      } else {
+        setHide(false); 
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [outRef]);
+
+  console.log(hide);
+
+    if (loading) {
     return (
       <div className="p-8">
         <div className="flex items-center justify-center min-h-[400px]">
@@ -58,25 +81,7 @@ export default function UsersPage() {
           Loading...
         </div>
       </div>
-    )
-  }
-
-  if (error) {
-    return (
-      <div className="p-8">
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-foreground mb-2">Users</h1>
-          <p className="text-muted-foreground">Manage and view user information.</p>
-        </div>
-        {/* <ErrorMessage message={error} onRetry={refetch} className="max-w-md" /> */}
-        <button
-          onClick={handleToggleError}
-          className="mt-4 px-4 py-2 bg-secondary text-secondary-foreground rounded-md hover:bg-secondary/80 transition-colors"
-        >
-          {showError ? "Load Valid Users" : "Simulate Error"}
-        </button>
-      </div>
-    )
+    );
   }
 
   return (
@@ -90,27 +95,38 @@ export default function UsersPage() {
         <div className="flex items-center justify-between mb-4">
           <div>
             <h1 className="text-3xl font-bold text-foreground mb-2">Users</h1>
-            <p className="text-muted-foreground">Manage and view user information.</p>
+            <p className="text-muted-foreground">
+              Manage and view user information.
+            </p>
           </div>
-          <button
-            onClick={handleToggleError}
-            className="px-4 py-2 bg-destructive/10 text-destructive border border-destructive/20 rounded-md hover:bg-destructive/20 transition-colors"
-          >
-            {showError ? "Load Valid Users" : "Simulate Error"}
-          </button>
         </div>
-        <div className="text-sm text-muted-foreground">{users?.length || 0} users registered</div>
+        <div className="text-sm text-muted-foreground">
+          {users?.length || 0} users registered
+        </div>
       </motion.div>
 
       <div>
         <div className="overflow-x-auto">
-          <motion.table variants={tableVariants} initial="hidden" animate="visible" className="w-full">
+          <motion.table
+            variants={tableVariants}
+            initial="hidden"
+            animate="visible"
+            className="w-full"
+          >
             <thead>
               <tr className="border-b border-border">
-                <th className="text-left py-3 px-4 font-semibold text-foreground">Name</th>
-                <th className="text-left py-3 px-4 font-semibold text-foreground">Email</th>
-                <th className="text-left py-3 px-4 font-semibold text-foreground">Company</th>
-                <th className="text-left py-3 px-4 font-semibold text-foreground">Phone</th>
+                <th className="text-left py-3 px-4 font-semibold text-foreground">
+                  Name
+                </th>
+                <th className="text-left py-3 px-4 font-semibold text-foreground">
+                  Email
+                </th>
+                <th className="text-left py-3 px-4 font-semibold text-foreground">
+                  Company
+                </th>
+                <th className="text-left py-3 px-4 font-semibold text-foreground">
+                  Phone
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -123,15 +139,21 @@ export default function UsersPage() {
                 >
                   <td className="py-3 px-4">
                     <div>
-                      <div className="font-medium text-foreground">{user.name}</div>
-                      <div className="text-sm text-muted-foreground">@{user.username}</div>
+                      <div className="font-medium text-foreground">
+                        {user.name}
+                      </div>
+                      <div className="text-sm text-muted-foreground">
+                        @{user.username}
+                      </div>
                     </div>
                   </td>
                   <td className="py-3 px-4 text-foreground">{user.email}</td>
                   <td className="py-3 px-4">
                     <div>
                       <div className="text-foreground">{user.company.name}</div>
-                      <div className="text-sm text-muted-foreground">{user.company.catchPhrase}</div>
+                      <div className="text-sm text-muted-foreground">
+                        {user.company.catchPhrase}
+                      </div>
                     </div>
                   </td>
                   <td className="py-3 px-4 text-foreground">{user.phone}</td>
@@ -142,35 +164,66 @@ export default function UsersPage() {
         </div>
       </div>
 
-      {/* <Modal isOpen={!!selectedUser} onClose={handleCloseModal} title="User Details">
-        {selectedUser && (
-          <div className="space-y-6">
-            <div className="text-center">
-              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl font-bold text-primary">{selectedUser.name.charAt(0)}</span>
+      {selectedUser  && (
+        <motion.div
+          initial={{ opacity: 0, y: 30, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{
+            duration: 0.6,
+            ease: "easeOut",
+            type: "spring",
+            stiffness: 120,
+          }}
+         
+          className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center px-4 overflow-y-auto "
+        >
+          <div 
+          ref={outRef}
+          className="bg-background rounded-xl shadow-2xl p-6 sm:p-8 w-full max-w-lg relative">
+            {/* Close Button */}
+            <button
+              className="absolute top-4 right-4 text-muted-foreground  transition-colors cursor-pointer hover:text-red-700"
+              onClick={handleCloseModal}
+              aria-label="Close"
+            >
+             <RxCrossCircled className="size-6" />
+            </button>
+
+            {/* Header */}
+            <div className="text-center mb-6">
+              {/* Avatar with Initial */}
+              <div className="relative inline-block">
+                <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto shadow-md border">
+                  <span className="text-3xl font-bold text-primary">
+                    {selectedUser.name.charAt(0)}
+                  </span>
+                </div>
+                {/* Optional Online Badge */}
+                <span className="absolute bottom-1 right-1 block w-4 h-4 rounded-full bg-green-500 ring-2 ring-background"></span>
               </div>
-              <h3 className="text-xl font-semibold text-foreground">{selectedUser.name}</h3>
-              <p className="text-muted-foreground">@{selectedUser.username}</p>
+
+              <h2 className="text-2xl font-bold mt-4 text-foreground">
+                {selectedUser.name}
+              </h2>
+              <p className="text-muted-foreground text-sm">
+                @{selectedUser.username}
+              </p>
             </div>
 
-            <div className="space-y-4">
-              <div>
-                <label className="text-sm font-medium text-muted-foreground">Email</label>
-                <p className="text-foreground">{selectedUser.email}</p>
-              </div>
+            {/* Details */}
+            <div className="grid gap-5 text-sm">
+              {/* Email */}
+              <DetailBlock label="Email" value={selectedUser.email} />
 
-              <div>
-                <label className="text-sm font-medium text-muted-foreground">Phone</label>
-                <p className="text-foreground">{selectedUser.phone}</p>
-              </div>
+              {/* Phone */}
+              <DetailBlock label="Phone" value={selectedUser.phone} />
 
-              <div>
-                <label className="text-sm font-medium text-muted-foreground">Website</label>
-                <p className="text-foreground">{selectedUser.website}</p>
-              </div>
+              {/* Website */}
+              <DetailBlock label="Website" value={selectedUser.website} />
 
+              {/* Address */}
               <div>
-                <label className="text-sm font-medium text-muted-foreground">Address</label>
+                <Label>Address</Label>
                 <p className="text-foreground">
                   {selectedUser.address.street}, {selectedUser.address.suite}
                   <br />
@@ -178,27 +231,39 @@ export default function UsersPage() {
                 </p>
               </div>
 
+              {/* Company */}
               <div>
-                <label className="text-sm font-medium text-muted-foreground">Company</label>
+                <Label>Company</Label>
                 <div className="space-y-1">
-                  <p className="text-foreground font-medium">{selectedUser.company.name}</p>
-                  <p className="text-sm text-muted-foreground">{selectedUser.company.catchPhrase}</p>
-                  <p className="text-sm text-muted-foreground">{selectedUser.company.bs}</p>
+                  <p className="font-medium text-foreground">
+                    {selectedUser.company.name}
+                  </p>
+                  <p className="text-muted-foreground">
+                    {selectedUser.company.catchPhrase}
+                  </p>
+                  <p className="text-muted-foreground">
+                    {selectedUser.company.bs}
+                  </p>
                 </div>
               </div>
             </div>
 
-            <div className="flex gap-2 pt-4">
-              <button className="flex-1 px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors">
-                Send Message
-              </button>
-              <button className="flex-1 px-4 py-2 bg-secondary text-secondary-foreground rounded-md hover:bg-secondary/80 transition-colors">
-                View Profile
-              </button>
-            </div>
           </div>
-        )}
-      </Modal> */}
+        </motion.div>
+      )}
     </div>
-  )
+  );
 }
+
+const Label = ({ children }: LabelProps) => (
+  <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide block mb-1">
+    {children}
+  </label>
+);
+
+const DetailBlock = ({ label, value }: DetailsProps) => (
+  <div>
+    <Label>{label}</Label>
+    <p className="text-foreground">{value}</p>
+  </div>
+);

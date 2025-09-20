@@ -5,6 +5,7 @@ import Link from "next/link"
 import { useFetch } from "@/hooks/useFetch"
 import { Post } from "@/types/allTypes"
 import { useParams } from "next/navigation"
+import Loader from "@/components/Loader"
 
 
 
@@ -21,7 +22,7 @@ export default function PostDetailPage() {
     return (
       <div className="p-8">
         <div className="flex items-center justify-center min-h-[400px]">
-          {/* <LoadingSpinner size="lg" /> */}
+          <Loader/>
         </div>
       </div>
     )

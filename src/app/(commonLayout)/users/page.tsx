@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { useFetch } from "@/hooks/useFetch";
 import { User } from "@/types/allTypes";
 import { RxCrossCircled } from "react-icons/rx";
+import Loader from "@/components/Loader";
 interface LabelProps {
   children: React.ReactNode;
 }
@@ -77,8 +78,7 @@ export default function UsersPage() {
     return (
       <div className="p-8">
         <div className="flex items-center justify-center min-h-[400px]">
-          {/* <LoadingSpinner size="lg" /> */}
-          Loading...
+         <Loader/>
         </div>
       </div>
     );
@@ -164,93 +164,92 @@ export default function UsersPage() {
         </div>
       </div>
 
-      {selectedUser  && (
-        <motion.div
-          initial={{ opacity: 0, y: 30, scale: 0.95 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{
-            duration: 0.6,
-            ease: "easeOut",
-            type: "spring",
-            stiffness: 120,
-          }}
-         
-          className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center px-4 overflow-y-auto "
+   
+
+{selectedUser && (
+  <AnimatePresence>
+    <motion.div
+      key="user-modal"
+      initial={{ opacity: 0, y: 30, scale: 0.95 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, y: 20, scale: 0.9 }} // 👈 closing animation
+      transition={{
+        duration: 0.4,
+        ease: "easeInOut",
+        type: "spring",
+        stiffness: 120,
+      }}
+      className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center px-4 overflow-y-auto"
+    >
+      <motion.div
+        ref={outRef}
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.9 }} // 👈 content fade/scale out
+        transition={{ duration: 0.3 }}
+        className="bg-background rounded-xl shadow-2xl p-6 sm:p-8 w-full max-w-lg relative"
+      >
+        {/* Close Button */}
+        <button
+          className="absolute top-4 right-4 text-muted-foreground hover:text-red-700 transition-colors cursor-pointer"
+          onClick={handleCloseModal}
+          aria-label="Close"
         >
-          <div 
-          ref={outRef}
-          className="bg-background rounded-xl shadow-2xl p-6 sm:p-8 w-full max-w-lg relative">
-            {/* Close Button */}
-            <button
-              className="absolute top-4 right-4 text-muted-foreground  transition-colors cursor-pointer hover:text-red-700"
-              onClick={handleCloseModal}
-              aria-label="Close"
-            >
-             <RxCrossCircled className="size-6" />
-            </button>
+          <RxCrossCircled className="size-6" />
+        </button>
 
-            {/* Header */}
-            <div className="text-center mb-6">
-              {/* Avatar with Initial */}
-              <div className="relative inline-block">
-                <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto shadow-md border">
-                  <span className="text-3xl font-bold text-primary">
-                    {selectedUser.name.charAt(0)}
-                  </span>
-                </div>
-                {/* Optional Online Badge */}
-                <span className="absolute bottom-1 right-1 block w-4 h-4 rounded-full bg-green-500 ring-2 ring-background"></span>
-              </div>
-
-              <h2 className="text-2xl font-bold mt-4 text-foreground">
-                {selectedUser.name}
-              </h2>
-              <p className="text-muted-foreground text-sm">
-                @{selectedUser.username}
-              </p>
+        {/* Header */}
+        <div className="text-center mb-6">
+          <div className="relative inline-block">
+            <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto shadow-md border">
+              <span className="text-3xl font-bold text-primary">
+                {selectedUser.name.charAt(0)}
+              </span>
             </div>
-
-            {/* Details */}
-            <div className="grid gap-5 text-sm">
-              {/* Email */}
-              <DetailBlock label="Email" value={selectedUser.email} />
-
-              {/* Phone */}
-              <DetailBlock label="Phone" value={selectedUser.phone} />
-
-              {/* Website */}
-              <DetailBlock label="Website" value={selectedUser.website} />
-
-              {/* Address */}
-              <div>
-                <Label>Address</Label>
-                <p className="text-foreground">
-                  {selectedUser.address.street}, {selectedUser.address.suite}
-                  <br />
-                  {selectedUser.address.city}, {selectedUser.address.zipcode}
-                </p>
-              </div>
-
-              {/* Company */}
-              <div>
-                <Label>Company</Label>
-                <div className="space-y-1">
-                  <p className="font-medium text-foreground">
-                    {selectedUser.company.name}
-                  </p>
-                  <p className="text-muted-foreground">
-                    {selectedUser.company.catchPhrase}
-                  </p>
-                  <p className="text-muted-foreground">
-                    {selectedUser.company.bs}
-                  </p>
-                </div>
-              </div>
-            </div>
-
+            <span className="absolute bottom-1 right-1 block w-4 h-4 rounded-full bg-green-500 ring-2 ring-background"></span>
           </div>
-        </motion.div>
-      )}
+
+          <h2 className="text-2xl font-bold mt-4 text-foreground">
+            {selectedUser.name}
+          </h2>
+          <p className="text-muted-foreground text-sm">
+            @{selectedUser.username}
+          </p>
+        </div>
+
+        {/* Details */}
+        <div className="grid gap-5 text-sm">
+          <DetailBlock label="Email" value={selectedUser.email} />
+          <DetailBlock label="Phone" value={selectedUser.phone} />
+          <DetailBlock label="Website" value={selectedUser.website} />
+
+          <div>
+            <Label>Address</Label>
+            <p className="text-foreground">
+              {selectedUser.address.street}, {selectedUser.address.suite}
+              <br />
+              {selectedUser.address.city}, {selectedUser.address.zipcode}
+            </p>
+          </div>
+
+          <div>
+            <Label>Company</Label>
+            <div className="space-y-1">
+              <p className="font-medium text-foreground">
+                {selectedUser.company.name}
+              </p>
+              <p className="text-muted-foreground">
+                {selectedUser.company.catchPhrase}
+              </p>
+              <p className="text-muted-foreground">{selectedUser.company.bs}</p>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
+  </AnimatePresence>
+)}
+
     </div>
   );
 }

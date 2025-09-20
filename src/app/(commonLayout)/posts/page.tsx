@@ -1,10 +1,10 @@
 "use client";
-
 import { useState } from "react";
 import { motion } from "framer-motion";
-import Link from "next/link";
 import { useFetch } from "@/hooks/useFetch";
 import { Post } from "@/types/allTypes";
+import PostCard from "@/components/reusable/PostCard";
+import Loader from "@/components/Loader";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -16,23 +16,15 @@ const containerVariants = {
   },
 };
 
-const cardVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.5,
-    },
-  },
-};
+
 
 export default function PostsPage() {
   const [showError, setShowError] = useState(false);
   const {
     data: posts,
-    loading
-  } = useFetch<Post[]>( "https://jsonplaceholder.typicode.com/posts");
+    loading,
+    error
+  } = useFetch<Post[]>( showError ? "https://jsonplaceholder.typicode.com/invalid-posts" : "https://jsonplaceholder.typicode.com/posts");
 
   const handleToggleError = () => {
     setShowError(!showError);
@@ -42,10 +34,27 @@ export default function PostsPage() {
     return (
       <div className="p-8">
         <div className="flex items-center justify-center min-h-[400px]">
-          {/* <LoadingSpinner size="lg" /> */}Loading...
+         <Loader/>
         </div>
       </div>
     );
+  }
+
+  if (error) {
+    return (
+      <div className="p-8">
+        <div className="mb-6">
+          <h1 className="text-3xl font-bold text-foreground mb-2">Posts</h1>
+          <p className="text-muted-foreground">Explore all blog posts and articles.</p>
+        </div>
+        <button
+          onClick={handleToggleError}
+          className="mt-4 px-4 py-2 bg-neutral-700 text-secondary-foreground rounded-md hover:bg-secondary/80 transition-colors cursor-pointer"
+        >
+          {showError ? "Load Valid Posts" : "Simulate Error"}
+        </button>
+      </div>
+    )
   }
 
 
@@ -82,41 +91,7 @@ export default function PostsPage() {
         animate="visible"
         className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
       >
-        {posts?.map((post) => (
-          <motion.div
-            key={post.id}
-            className="bg-neutral-800 p-3 rounded-lg border border-transparent"
-            variants={cardVariants}
-            whileHover={{ scale: 1.03, borderColor: "hsl(var(--primary))" }}
-            transition={{ type: "spring", stiffness: 200, damping: 15 }}
-          >
-            <Link href={`/posts/${post.id}`}>
-              <div className="h-full">
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs text-primary bg-primary/10 px-2 py-1 rounded-full">
-                      Post #{post.id}
-                    </span>
-                    <span className="text-xs text-muted-foreground">
-                      User {post.userId}
-                    </span>
-                  </div>
-                  <h3 className="font-semibold text-foreground line-clamp-2 capitalize">
-                    {post.title}
-                  </h3>
-                  <p className="text-sm text-muted-foreground line-clamp-3">
-                    {post.body}
-                  </p>
-                  <div className="pt-2 border-t border-border">
-                    <span className="text-xs text-primary hover:text-primary/80 transition-colors">
-                      Read more →
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </Link>
-          </motion.div>
-        ))}
+        {posts?.map((post) => <PostCard key={post.id} post={post}/>)}
       </motion.div>
     </div>
   );

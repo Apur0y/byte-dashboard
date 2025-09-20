@@ -1,25 +1,23 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { motion, AnimatePresence } from "framer-motion"
-import { HiHome } from "react-icons/hi"
-import { FcDocument } from "react-icons/fc"
-import { BiUser } from "react-icons/bi"
-import { MdKeyboardDoubleArrowLeft } from "react-icons/md"
-
-
+import { useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
+import { HiHome } from "react-icons/hi";
+import { FcDocument } from "react-icons/fc";
+import { BiUser } from "react-icons/bi";
+import { MdKeyboardDoubleArrowLeft } from "react-icons/md";
 
 const navigation = [
   { name: "Dashboard", href: "/", icon: HiHome },
   { name: "Posts", href: "/posts", icon: FcDocument },
   { name: "Users", href: "/users", icon: BiUser },
-]
+];
 
 export default function Sidebar() {
-  const [isCollapsed, setIsCollapsed] = useState(false)
-  const pathname = usePathname()
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const pathname = usePathname();
 
   return (
     <motion.div
@@ -46,21 +44,21 @@ export default function Sidebar() {
           onClick={() => setIsCollapsed(!isCollapsed)}
           className="p-2 rounded-lg hover:bg-secondary transition-colors cursor-pointer"
         >
-          {isCollapsed ?
-          //  <ChevronRightIcon className="w-4 h-4" />
-          <MdKeyboardDoubleArrowLeft /> : 
-           <MdKeyboardDoubleArrowLeft className="rotate-180"/>
-          //  <ChevronLeftIcon className="w-4 h-4" />
-
-           }
+          {
+            isCollapsed ? (
+              //  <ChevronRightIcon className="w-4 h-4" />
+              <MdKeyboardDoubleArrowLeft />
+            ) : (
+              <MdKeyboardDoubleArrowLeft className="rotate-180" />
+            )
+            //  <ChevronLeftIcon className="w-4 h-4" />
+          }
         </button>
-        
-
       </div>
 
       <nav className="p-4 space-y-2">
         {navigation.map((item) => {
-          const isActive = pathname === item.href
+          const isActive = pathname === item.href;
           return (
             <Link
               key={item.name}
@@ -93,9 +91,13 @@ export default function Sidebar() {
                 />
               )}
             </Link>
-          )
+          );
         })}
+
+        <Link href={"/login"}>
+          <button className="mt-7 border px-5 py-2 rounded-md cursor-pointer">Log Out</button>
+        </Link>
       </nav>
     </motion.div>
-  )
+  );
 }

@@ -9,16 +9,13 @@ export default function RootLayout({
 }>) {
   
   return (
-    <html lang="en">
-      <body
-      >
+    
          <div className="flex min-h-screen">
             <Sidebar />
             <main className="flex-1 ml-64">
                 {children}
             </main>
           </div>
-      </body>
-    </html>
+     
   );
 }

@@ -24,7 +24,7 @@ export default function Sidebar() {
       initial={{ width: 256 }}
       animate={{ width: isCollapsed ? 80 : 256 }}
       transition={{ duration: 0.3, ease: "easeInOut" }}
-      className="fixed left-0 top-0 h-full bg-card border-r border-border z-50"
+      className="fixed left-0 top-0 h-full bg-card border-r border-border z-50 "
     >
       <div className="flex items-center justify-between p-4 border-b border-border">
         <AnimatePresence mode="wait">
@@ -95,7 +95,9 @@ export default function Sidebar() {
         })}
 
         <Link href={"/login"}>
-          <button className="mt-7 border px-5 py-2 rounded-md cursor-pointer">Log Out</button>
+          <button className="mt-7 border px-5 py-2 rounded-md cursor-pointer">
+            Log Out
+          </button>
         </Link>
       </nav>
     </motion.div>

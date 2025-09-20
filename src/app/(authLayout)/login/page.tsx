@@ -2,8 +2,8 @@
 
 import type React from "react"
 
-import { signIn} from "next-auth/react"
-import { useState } from "react"
+import { signIn, useSession} from "next-auth/react"
+import { useEffect, useState } from "react"
 import Image from "next/image"
 import { FcGoogle } from "react-icons/fc"
 import { useRouter } from "next/navigation"
@@ -14,7 +14,8 @@ export default function LoginPage() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false);
-  const router=useRouter()
+  const router=useRouter();
+  const { data: session } = useSession();
 
 
   const handleEmailLogin = async (e: React.FormEvent) => {
@@ -24,9 +25,18 @@ export default function LoginPage() {
 
   const handleGoogleLogin = async () => {
     setIsLoading(true)
-    await signIn("google", { callbackUrl: "/" })
+    const res =await signIn("google", { callbackUrl: "/" });
+    console.log("his is goofle responce",res);
     setIsLoading(false)
   }
+
+  useEffect(() => {
+  if (session) {
+
+    localStorage.setItem("user", JSON.stringify(session.user));
+  }
+}, [session]);
+
 
   return (
     <div className="min-h-screen flex ">

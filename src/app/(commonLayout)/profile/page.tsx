@@ -3,21 +3,26 @@
 
 import { useSession, signOut } from "next-auth/react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function ProfilePage() {
   const { data: session, status } = useSession();
+  const router=useRouter()
 
   if (status === "loading") return <p className="text-center mt-10">Loading...</p>;
+  const handleLogin=()=>{
+    router.push("/login")
+  }
 
   if (!session)
     return (
       <div className="flex flex-col items-center justify-center min-h-screen">
         <p className="mb-4 text-xl">You are not logged in.</p>
         <button
-          onClick={() => signOut()}
-          className="px-6 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition"
+          onClick={() => handleLogin()}
+          className="px-6 py-2 text-white border rounded-lg hover:bg-neutral-800 transition cursor-pointer"
         >
-          Go Back
+          Log In
         </button>
       </div>
     );
@@ -36,7 +41,7 @@ export default function ProfilePage() {
         <p className="text-gray-600 mb-6">{session.user?.email}</p>
         <button
           onClick={() => signOut()}
-          className="px-6 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition"
+          className="px-6 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition cursor-pointer"
         >
           Logout
         </button>

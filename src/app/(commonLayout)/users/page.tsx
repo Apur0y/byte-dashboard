@@ -85,7 +85,7 @@ export default function UsersPage() {
   }
 
   return (
-    <div className="p-8">
+    <div className="p-8 overflow-hidden">
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -105,13 +105,13 @@ export default function UsersPage() {
         </div>
       </motion.div>
 
-      <div>
-        <div className="overflow-x-auto">
+      <div className="overflow-hidden">
+        <div className="">
           <motion.table
             variants={tableVariants}
             initial="hidden"
             animate="visible"
-            className="w-full"
+            className="w-full  "
           >
             <thead>
               <tr className="border-b border-border">
@@ -129,7 +129,7 @@ export default function UsersPage() {
                 </th>
               </tr>
             </thead>
-            <tbody>
+            <tbody >
               {users?.map((user) => (
                 <motion.tr
                   key={user.id}
